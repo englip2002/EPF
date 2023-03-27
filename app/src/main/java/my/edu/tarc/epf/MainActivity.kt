@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        //the controller for the 3 dot at top right
+        //the controller for the 3 dot at top right, sometimes we might no need some option to show
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.nav_profile) {
                 binding.appBarMain.toolbar.menu.findItem(R.id.action_settings).isVisible = false
@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    //activate the menu (3 dot) on main file
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
@@ -96,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    //action of the menu (3 dot) need to add menuItem in menu/main.xml
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_settings) {
             Snackbar.make(
@@ -108,6 +110,4 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-
 }

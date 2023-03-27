@@ -35,9 +35,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //state what to do when button dividend is clicked (need to set in navigation file also)
         binding.buttonDividend.setOnClickListener {
             findNavController().navigate(R.id.action_nav_home_to_nav_dividend)
-
         }
 
         binding.buttonInvestment.setOnClickListener {
