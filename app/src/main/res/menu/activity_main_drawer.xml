@@ -18,11 +18,11 @@
             android:title="@string/menu_slideshow" />
         <item
             android:id="@+id/nav_dividend"
-            android:icon="@drawable/ic_baseline_dividend_24"
+            android:icon="@drawable/baseline_dividend_24"
             android:title="@string/menu_dividend" />
         <item
             android:id="@+id/nav_investment"
-            android:icon="@drawable/ic_baseline_investment_24"
+            android:icon="@drawable/baseline_investment_24"
             android:title="@string/menu_investment" />
     </group>
 </menu>

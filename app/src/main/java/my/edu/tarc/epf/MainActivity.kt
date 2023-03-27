@@ -2,6 +2,10 @@ package my.edu.tarc.epf
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -26,11 +30,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        //delete since the below floating action button is deleted
-//        binding.appBarMain.fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -38,12 +37,53 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_dividend, R.id.nav_investment
+                R.id.nav_home,
+                R.id.nav_gallery,
+                R.id.nav_slideshow,
+                R.id.nav_dividend,
+                R.id.nav_investment
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        //the controller for the 3 dot at top right
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.nav_profile) {
+                binding.appBarMain.toolbar.menu.findItem(R.id.action_settings).isVisible = false
+                binding.appBarMain.toolbar.menu.findItem(R.id.action_about).isVisible = false
+                binding.appBarMain.toolbar.menu.findItem(R.id.action_save).isVisible = true
+
+            } else if (destination.id == R.id.nav_about) {
+                binding.appBarMain.toolbar.menu.findItem(R.id.action_settings).isVisible = false
+                binding.appBarMain.toolbar.menu.findItem(R.id.action_about).isVisible = false
+                binding.appBarMain.toolbar.menu.findItem(R.id.action_save).isVisible = false
+            } else {
+                binding.appBarMain.toolbar.visibility = View.VISIBLE
+            }
+        }
+        //back press
+        val backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val builder = AlertDialog.Builder(this@MainActivity)
+                builder.setMessage(getString(R.string.exit_message))
+                    .setPositiveButton(getString(R.string.exit), { _, _ -> finish() })
+                    .setNegativeButton(getString(R.string.cancel), { _, _ -> })
+
+                builder.create().show()
+            }
+        }
+        onBackPressedDispatcher.addCallback(backPressedCallback)
+
+        //refer to profile picture image view
+        val view = navView.getHeaderView(0)
+        view.setOnClickListener {
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_profile)
+            binding.drawerLayout.closeDrawers()
+        }
+
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -55,4 +95,19 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_settings) {
+            Snackbar.make(
+                findViewById(R.id.nav_host_fragment_content_main),
+                R.string.action_settings,
+                Snackbar.LENGTH_SHORT
+            ).show()
+        } else if (item.itemId == R.id.action_about) {
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.nav_about)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
 }
